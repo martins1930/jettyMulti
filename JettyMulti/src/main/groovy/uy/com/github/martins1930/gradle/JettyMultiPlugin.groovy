@@ -1,4 +1,4 @@
-package uy.org.gradle;
+package uy.com.github.martins1930.gradle;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -36,9 +36,9 @@ public class JettyMultiPlugin implements Plugin<Project> {
 //                        }
 //                }
 //                project.configurations.runtime.
-                project.configurations.collectMany { it.allDependencies }
-                                        .findAll { it instanceof ProjectDependency }
-                                        .each { println "Dependency Find: ${it.name}" }
+//                project.configurations.collectMany { it.allDependencies }
+//                                        .findAll { it instanceof ProjectDependency }
+//                                        .each { println "Dependency Find: ${it.name}" }
             }
             dependsOn = ['build']
             description = "Task to run exploded war with jetty"

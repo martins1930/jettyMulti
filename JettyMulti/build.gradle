@@ -1,14 +1,42 @@
 
 apply plugin: 'groovy'
 apply plugin: 'maven'
+apply plugin: 'signing'
 
 
 ext {
     jetty_version = '8.1.7.v20120910' 
 }
 
-group = 'uy.org.gradle'
-version = '1.0-SNAPSHOT'
+group = 'uy.com.github.martins1930.gradle'
+version = '1.0'
+
+
+task groovydocJar(type: Jar, dependsOn: groovydoc) {
+    classifier = 'javadoc'
+    from 'build/docs/groovydoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+    archives groovydocJar
+    archives sourcesJar
+}
+
+//http://www.gradle.org/docs/current/userguide/signing_plugin.html
+//required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+signing {
+    sign configurations.archives
+}
+
+configurations {
+    deployerJars
+}
 
 repositories {
     mavenCentral()
@@ -17,6 +45,7 @@ repositories {
 dependencies {
     compile gradleApi()
     groovy localGroovy()    
+    deployerJars "org.apache.maven.wagon:wagon-http:1.0-beta-2"
     compile  "org.eclipse.jetty:jetty-server:${jetty_version}"
     compile  "org.eclipse.jetty:jetty-jndi:${jetty_version}"
     compile  "org.eclipse.jetty:jetty-webapp:${jetty_version}"
@@ -25,11 +54,51 @@ dependencies {
     compile  "org.eclipse.jetty:jetty-annotations:${jetty_version}"    
 }
 
-
+//https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
 uploadArchives {
     repositories {
         mavenDeployer {
+            configuration = configurations.deployerJars
             repository(url: uri('../../repo'))
+//            pom.packaging = "jar"
+            pom.project {
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+                name = "${project.name}"
+                description = "Gradle Jetty plugin for multi (or single) projects"
+                url = "https://github.com/martins1930/jettyMulti"
+                scm {
+                        connection 'scm:git:git://github.com/martins1930/jettyMulti.git'
+                        developerConnection 'scm:git:ssh://git@github.com:martins1930/jettyMulti.git'
+                        url 'https://github.com/martins1930/jettyMulti.git'
+                }               
+                
+//       reference         
+//  <scm>
+//    <connection>scm:git:git@github.com:juven/git-demo.git</connection>
+//    <developerConnection>scm:git:git@github.com:juven/git-demo.git</developerConnection>
+//    <url>git@github.com:juven/git-demo.git</url>
+//  </scm>                
+                
+		developers {
+			developer {
+				id 'martins1930'
+				email 'martins1930@gmail.com'
+				name 'Martin Steffen'
+				organization 'Martin Steffen'
+				organizationUrl 'https://github.com/martins1930'
+				roles {
+					role 'Developer'
+				}
+			}
+		}                
+            }
+            
         }
     }
 }
