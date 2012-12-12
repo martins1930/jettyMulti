@@ -23,7 +23,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'uy.org.gradle', name: 'JettyMulti', version: '1.0'
+        classpath group: 'uy.com.github.martins1930.gradle', name: 'JettyMulti', version: '1.0'
     }
 }
 apply plugin: 'jettymulti'
