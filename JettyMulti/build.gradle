@@ -1,0 +1,35 @@
+
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+
+ext {
+    jetty_version = '8.1.7.v20120910' 
+}
+
+group = 'uy.org.gradle'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile gradleApi()
+    groovy localGroovy()    
+    compile  "org.eclipse.jetty:jetty-server:${jetty_version}"
+    compile  "org.eclipse.jetty:jetty-jndi:${jetty_version}"
+    compile  "org.eclipse.jetty:jetty-webapp:${jetty_version}"
+    compile  "org.eclipse.jetty:jetty-jsp:${jetty_version}"
+    compile  "org.eclipse.jetty:jetty-plus:${jetty_version}"
+    compile  "org.eclipse.jetty:jetty-annotations:${jetty_version}"    
+}
+
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri('../../repo'))
+        }
+    }
+}
