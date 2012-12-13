@@ -1,5 +1,5 @@
 
-package uy.com.github.martins1930.gradle
+package com.github.martins1930.gradle
 
 class JettyMultiExtension {
     

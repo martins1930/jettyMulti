@@ -1,5 +1,5 @@
 
-package uy.com.github.martins1930.gradle;
+package com.github.martins1930.gradle;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
