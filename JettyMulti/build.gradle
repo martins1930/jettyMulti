@@ -9,7 +9,7 @@ ext {
 }
 
 group = 'uy.com.github.martins1930.gradle'
-version = '1.0'
+version = '1.0.0-RELEASE'
 
 
 task groovydocJar(type: Jar, dependsOn: groovydoc) {
@@ -59,9 +59,16 @@ uploadArchives {
     repositories {
         mavenDeployer {
             configuration = configurations.deployerJars
-            repository(url: uri('../../repo'))
-//            pom.packaging = "jar"
+//            repository(url: uri('../../repo'))
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
+              authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+            
             pom.project {
+                packaging = 'jar'
+                name = "${project.name}"
+                description = "Gradle Jetty plugin for multi (or single) projects"
+                url = "https://github.com/martins1930/jettyMulti"
                 licenses {
                     license {
                         name 'The Apache Software License, Version 2.0'
@@ -69,9 +76,6 @@ uploadArchives {
                         distribution 'repo'
                     }
                 }
-                name = "${project.name}"
-                description = "Gradle Jetty plugin for multi (or single) projects"
-                url = "https://github.com/martins1930/jettyMulti"
                 scm {
                         connection 'scm:git:git://github.com/martins1930/jettyMulti.git'
                         developerConnection 'scm:git:ssh://git@github.com:martins1930/jettyMulti.git'
