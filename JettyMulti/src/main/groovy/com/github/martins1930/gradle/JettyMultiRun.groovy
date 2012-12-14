@@ -189,7 +189,7 @@ public class JettyMultiRun extends DefaultTask  {
         //var in listener:
         final String classDirListener = classDir ;
         final String webappDirListener = webappDir ;
-        final Logger loggerListener = logger; ;
+        final Logger loggerListener = logger;
         Scanner.Listener listener = new Scanner.BulkListener() {
 
             @Override
@@ -212,7 +212,7 @@ public class JettyMultiRun extends DefaultTask  {
                         ctxToRestart.start();
                     }
                     else {
-                        loggerListener.info("******Restart application by listener (filenames.size==1)??...");
+                        loggerListener.warn("******Restart application by listener (filenames.size==1)??...");
 //                        webapp.stop();
 //                        createClassDir(classDirListener, webappDirListener);
 //                        webapp.start();
