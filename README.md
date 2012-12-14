@@ -8,6 +8,7 @@ But JettyMulti is based on Jetty 8 and allows you to deploy multiple war in a si
 Features added to the jetty plugin:
 * Jetty 8 embedded
 * Run multiple war in a single Jetty instance
+* You can utilize Servlets (in your project) with @WebServlet annotation
 
 Also support hot deploy of declared dependents war and the project as the Jetty Plugin:
 http://www.gradle.org/docs/current/dsl/org.gradle.api.plugins.jetty.JettyRun.html
@@ -62,6 +63,6 @@ or
 ## Sample Project that uses the plugin
 https://github.com/martins1930/samples/tree/master/gradle/Foop
 
-## Search latest and greatest version deployed in Maven Central:
+### Search latest and greatest version deployed in Maven Central:
 http://search.maven.org/#search|ga|1|a%3A%22JettyMulti%22
 
