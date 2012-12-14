@@ -18,7 +18,20 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.util.ssl.SslContextFactory
 import org.eclipse.jetty.server.ssl.SslSelectChannelConnector
-
+import org.eclipse.jetty.annotations.AnnotationConfiguration
+import org.eclipse.jetty.annotations.AnnotationConfiguration
+import org.eclipse.jetty.webapp.WebXmlConfiguration
+import org.eclipse.jetty.webapp.WebInfConfiguration
+import org.eclipse.jetty.plus.webapp.PlusConfiguration
+import org.eclipse.jetty.webapp.MetaInfConfiguration
+import org.eclipse.jetty.webapp.TagLibConfiguration
+import org.eclipse.jetty.webapp.FragmentConfiguration
+import org.eclipse.jetty.webapp.Configuration ;
+import org.eclipse.jetty.plus.webapp.EnvConfiguration
+import org.eclipse.jetty.servlet.ServletHolder
+import org.eclipse.jetty.webapp.WebAppClassLoader ;
+import org.eclipse.jetty.util.resource.Resource;
+import org.apache.commons.io.FileUtils ;
 
 public class JettyMultiRun extends DefaultTask  {
     
@@ -121,9 +134,21 @@ public class JettyMultiRun extends DefaultTask  {
         
         final WebAppContext webapp = new WebAppContext();
         webapp.setContextPath("/" + contextApp);
+        webapp.setLogUrlOnStart(true);
         webapp.setResourceBase(webappDir);
         webapp.setParentLoaderPriority(false);
-        webapp.setExtraClasspath(classPathApp+","+classDir+","+resourceDir);
+        webapp.setExtraClasspath(classPathApp+","+resourceDir);
+        createClassDir(classDir, webappDir);
+        
+        
+//        webapp.setExtraClasspath(classPathApp+","+classDir+","+resourceDir);
+        
+        
+//        1.WebAppClassLoader wacl = new WebAppClassLoader(webapp);
+//        2.ver JettyConfiguration
+//        3.probar poner los .class en la carpeta WEB-INF como si fuera un war, luego de deployado borrar la carpeta...
+//        webapp.addServlet(new ServletHolder(new Hola()),"/*");
+        
         
         List<WebAppContext> webDeps = [] ;
         if (containsElements) {
@@ -160,25 +185,38 @@ public class JettyMultiRun extends DefaultTask  {
         } 
         scan.setScanDirs(listenFile);     
         
+        
+        //var in listener:
+        final String classDirListener = classDir ;
+        final String webappDirListener = webappDir ;
+        final Logger loggerListener = logger; ;
         Scanner.Listener listener = new Scanner.BulkListener() {
 
             @Override
             public void filesChanged(List<String> filenames) throws Exception {
                 //part redeplpoy 
                 if (filenames.size() > 1) {
+                    loggerListener.info("******Restart application by listener...");
                     webapp.stop();
+                    createClassDir(classDirListener, webappDirListener);
                     webapp.start();
+                    Thread.sleep(1000) ; //sleep for stability of deploy
+                    deleteClassDir(webappDirListener) ;
                 }
                 else if (filenames.size()==1) {
                     String fileChange = filenames.get(0) ;
                     if (fileChange.endsWith(".war")) {
+                        loggerListener.info("******Restart dependent application by listener...");
                         WebAppContext ctxToRestart = JettyMultiRun.getContextApp(fileChange, webDeps);
                         ctxToRestart.stop();
                         ctxToRestart.start();
                     }
                     else {
-                        webapp.stop();
-                        webapp.start();                        
+                        loggerListener.info("******Restart application by listener (filenames.size==1)??...");
+//                        webapp.stop();
+//                        createClassDir(classDirListener, webappDirListener);
+//                        webapp.start();
+//                        deleteClassDir(webappDirListener) ;
                     }
                     
                 }
@@ -189,6 +227,7 @@ public class JettyMultiRun extends DefaultTask  {
         scan.start();
         
         server.start();
+        deleteClassDir(webappDir);
         server.join();
 
         scan.stop();
@@ -212,6 +251,26 @@ public class JettyMultiRun extends DefaultTask  {
         return ret;
     }
     
+    public void createClassDir(String classDir, String webappDir) {
+        File dirClassesWeb = new File(webappDir+"/WEB-INF/classes") ; 
+        if (dirClassesWeb.exists()){
+            FileUtils.deleteDirectory(dirClassesWeb) ;
+        }
+        boolean dirCreated = dirClassesWeb.mkdir();
+        if (dirCreated) {
+            File fclassDir = new File(classDir) ; 
+            FileUtils.copyDirectory(fclassDir, dirClassesWeb);        
+        }
+    }
+    
+    public void deleteClassDir(String dirName){
+        File dirClassesWeb = new File(dirName+"/WEB-INF/classes") ; 
+        if (dirClassesWeb.exists()){
+            FileUtils.deleteDirectory(dirClassesWeb) ;
+        }
+    }
+    
+    
     public static WebAppContext getContextApp(String fileChange, List<WebAppContext> webDeps) {
         WebAppContext retCtx = null ;
         webDeps.each {
@@ -222,6 +281,8 @@ public class JettyMultiRun extends DefaultTask  {
         }
         return retCtx ;
     }
+    
+    
     
     
 }

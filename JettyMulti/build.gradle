@@ -1,3 +1,5 @@
+import org.gradle.api.XmlProvider
+import org.gradle.api.artifacts.maven.MavenDeployment
 
 apply plugin: 'groovy'
 apply plugin: 'maven'
@@ -43,8 +45,6 @@ repositories {
 }
 
 dependencies {
-    compile gradleApi()
-    groovy localGroovy()    
     deployerJars "org.apache.maven.wagon:wagon-http:1.0-beta-2"
     compile  "org.eclipse.jetty:jetty-server:${jetty_version}"
     compile  "org.eclipse.jetty:jetty-jndi:${jetty_version}"
@@ -52,17 +52,21 @@ dependencies {
     compile  "org.eclipse.jetty:jetty-jsp:${jetty_version}"
     compile  "org.eclipse.jetty:jetty-plus:${jetty_version}"
     compile  "org.eclipse.jetty:jetty-annotations:${jetty_version}"    
+    compile  "commons-io:commons-io:2.4"    
+    compile gradleApi()
+    groovy localGroovy()    
 }
 
 //https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
 uploadArchives {
     repositories {
         mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signPom(deployment) }            
             configuration = configurations.deployerJars
-//            repository(url: uri('../../repo'))
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
-              authentication(userName: sonatypeUsername, password: sonatypePassword)
-            }
+            repository(url: uri('../../repo'))
+//            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
+//              authentication(userName: sonatypeUsername, password: sonatypePassword)
+//            }
             
             pom.project {
                 packaging = 'jar'
