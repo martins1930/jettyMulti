@@ -39,7 +39,7 @@ apply plugin: 'jettymulti'
 ```
 
 2) Configure the ports :
-
+_Note: If SSL is not needed coment (or delete) jMPortSecure, jMKeyStore and jMKeyStorePassword_
 ```groovy
 jettyMulti {
     jMPort = 8096 ;
@@ -49,7 +49,6 @@ jettyMulti {
     jMScanInterval = 1 ;
 }
 ```
-_Note: If SSL is not needed coment jMPortSecure, jMKeyStore and jMKeyStorePassword_
 
 3) In your project folder execute the gradle task jettyMRun: 
 ```shell
@@ -61,6 +60,7 @@ gradle jettyMRun
 or
 <code>https://localhost:8443/ProjectName/</code>
 
+
 ## Usage with two apps in a single Jetty instance:
 
 Add jMDeployDeps with path to other wars to be deployed in jetty:
@@ -71,14 +71,19 @@ jettyMulti {
     jMDeployDeps = ['/path/to/archive/App1.war', '/path/to/other/archive/App3.war']
 }
 ```
-When run the project with ```shell gradle jettyMRun ``` , 
+When run the project with 
+```shell 
+gradle jettyMRun 
+``` , 
 three projects will be deployed in Jetty in the following order:
     1) App1 - http://localhost:8096/App1
     2) App2 - http://localhost:8096/App2
     3) The project itself, if the project is called Foo then you can access http://localhost:8096/Foo
 
+
 ## Sample Project that uses the plugin:
 https://github.com/martins1930/samples/tree/master/gradle/Foop
+
 
 ### Search latest and greatest version deployed in Maven Central:
 http://search.maven.org/#search|ga|1|a%3A%22JettyMulti%22
