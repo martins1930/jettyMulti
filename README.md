@@ -72,9 +72,10 @@ jettyMulti {
 }
 ```
 When run the project with 
-```shell 
-gradle jettyMRun 
-``` , 
+```shell
+gradle jettyMRun
+```
+, 
 three projects will be deployed in Jetty in the following order:
     1) App1 - http://localhost:8096/App1
     2) App2 - http://localhost:8096/App2
