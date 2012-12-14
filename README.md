@@ -9,6 +9,7 @@ Features added to the jetty plugin:
 * Jetty 8 embedded
 * Run multiple war in a single Jetty instance
 * You can utilize Servlets (in your project) with @WebServlet annotation
+* Easy SSL configuration. 
 
 Also support hot deploy of declared dependents war and the project as the Jetty Plugin:
 http://www.gradle.org/docs/current/dsl/org.gradle.api.plugins.jetty.JettyRun.html
@@ -48,6 +49,7 @@ jettyMulti {
     jMScanInterval = 1 ;
 }
 ```
+_Note: If SSL is not needed coment jMPortSecure, jMKeyStore and jMKeyStorePassword_
 
 3) In your project folder execute the gradle task jettyMRun: 
 ```shell
@@ -59,8 +61,23 @@ gradle jettyMRun
 or
 <code>https://localhost:8443/ProjectName/</code>
 
+## Usage with two apps in a single Jetty instance:
 
-## Sample Project that uses the plugin
+Add jMDeployDeps with path to other wars to be deployed in jetty:
+```groovy
+jettyMulti {
+    jMPort = 8096 ;
+    jMScanInterval = 1 ;
+    jMDeployDeps = ['/path/to/archive/App1.war', '/path/to/other/archive/App3.war']
+}
+```
+When run the project with ```shell gradle jettyMRun ``` , 
+three projects will be deployed in Jetty in the following order:
+    1) App1 - http://localhost:8096/App1
+    2) App2 - http://localhost:8096/App2
+    3) The project itself, if the project is called Foo then you can access http://localhost:8096/Foo
+
+## Sample Project that uses the plugin:
 https://github.com/martins1930/samples/tree/master/gradle/Foop
 
 ### Search latest and greatest version deployed in Maven Central:
