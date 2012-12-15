@@ -11,7 +11,7 @@ ext {
 }
 
 group = 'com.github.martins1930.gradle' 
-version = '1.1.0-RELEASE'
+version = '1.2.0-RELEASE'
 
 
 task groovydocJar(type: Jar, dependsOn: groovydoc) {
@@ -32,9 +32,9 @@ artifacts {
 
 //http://www.gradle.org/docs/current/userguide/signing_plugin.html
 //required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
-signing {
-    sign configurations.archives
-}
+//signing {
+//    sign configurations.archives
+//}
 
 configurations {
     deployerJars
@@ -61,7 +61,7 @@ dependencies {
 uploadArchives {
     repositories {
         mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signPom(deployment) }            
+//            beforeDeployment { MavenDeployment deployment -> signPom(deployment) }            
             configuration = configurations.deployerJars
             repository(url: uri('../../repo'))
 //            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {

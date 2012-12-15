@@ -13,7 +13,8 @@ import org.eclipse.jetty.util.Scanner;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
+import org.eclipse.jetty.server.bio.SocketConnector;
+//import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.util.ssl.SslContextFactory
@@ -78,14 +79,15 @@ public class JettyMultiRun extends DefaultTask  {
         server.setDumpBeforeStop(false);
         
         List<Connector> conectorsServer = [] ;
-        SelectChannelConnector connectorHttp = new SelectChannelConnector();
+        SocketConnector connectorHttp = new SocketConnector();
+//        SelectChannelConnector connectorHttp = new SelectChannelConnector();
         connectorHttp.setPort(port_j);
         connectorHttp.setMaxIdleTime(300000);
         connectorHttp.setAcceptors(2) ;
         connectorHttp.setStatsOn(false) ;
         connectorHttp.setConfidentialPort(port_j_sec) ; 
-        connectorHttp.setLowResourcesConnections(20000);
-        connectorHttp.setLowResourcesMaxIdleTime(5000);
+//        connectorHttp.setLowResourcesConnections(20000);
+//        connectorHttp.setLowResourcesMaxIdleTime(5000);
         conectorsServer.add(connectorHttp);
         
  
@@ -137,6 +139,8 @@ public class JettyMultiRun extends DefaultTask  {
         webapp.setLogUrlOnStart(true);
         webapp.setResourceBase(webappDir);
         webapp.setParentLoaderPriority(false);
+        webapp.setCopyWebInf(true);
+//        webapp.setCopyWebDir(true); 
         webapp.setExtraClasspath(classPathApp+","+resourceDir);
         createClassDir(classDir, webappDir);
         
