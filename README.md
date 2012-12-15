@@ -61,7 +61,7 @@ or
 <code>https://localhost:8443/ProjectName/</code>
 
 
-## Usage with two apps in a single Jetty instance:
+## Usage with three apps in a single Jetty instance:
 
 Add jMDeployDeps with path to other wars to be deployed in jetty:
 ```groovy
@@ -77,9 +77,9 @@ gradle jettyMRun
 ```
 , 
 three projects will be deployed in Jetty in the following order:
-    1) App1 - http://localhost:8096/App1
-    2) App2 - http://localhost:8096/App2
-    3) The project itself, if the project is called Foo then you can access http://localhost:8096/Foo
+  1) App1 - http://localhost:8096/App1
+  2) App2 - http://localhost:8096/App2
+  3) The project itself, if the project is called Foo then you can access http://localhost:8096/Foo
 
 
 ## Sample Project that uses the plugin:
