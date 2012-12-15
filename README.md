@@ -77,9 +77,10 @@ gradle jettyMRun
 ```
 , 
 three projects will be deployed in Jetty in the following order:
-  1) App1 - http://localhost:8096/App1
-  2) App2 - http://localhost:8096/App2
-  3) The project itself, if the project is called Foo then you can access http://localhost:8096/Foo
+
+1. App1 - http://localhost:8096/App1
+2. App2 - http://localhost:8096/App2
+3. The project itself, if the project is called Foo then you can access http://localhost:8096/Foo
 
 
 ## Sample Project that uses the plugin:
