@@ -32,7 +32,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'com.github.martins1930.gradle', name: 'JettyMulti', version: '1.0.0-RELEASE'
+        classpath group: 'com.github.martins1930.gradle', name: 'JettyMulti', version: '1.2.0-RELEASE'
     }
 }
 apply plugin: 'jettymulti'
